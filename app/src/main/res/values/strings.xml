@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PhoneAgent</string>
+    <string name="accessibility_service_label">PhoneAgent 접근성</string>
+    <string name="accessibility_service_description">PhoneAgent가 화면 내용을 읽고, 탭·스크롤·입력 등 사람 대신 앱을 조작하기 위해 접근성 권한을 사용합니다. 화면 텍스트와 (필요 시) 스크린샷은 설정에서 지정한 LLM 제공자에게만 전송됩니다.</string>
+</resources>

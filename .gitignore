@@ -1,0 +1,22 @@
+# Gradle / build
+.gradle/
+build/
+app/build/
+local.properties
+
+# Android Studio / IDE
+.idea/
+*.iml
+.DS_Store
+captures/
+
+# Secrets — never publish signing material
+keystore.properties
+*.jks
+*.keystore
+
+# Prebuilt APK at repo root (distributed via GitHub Releases instead)
+/PhoneAgent-*.apk
+
+# OMC / agent state
+.omc/state/

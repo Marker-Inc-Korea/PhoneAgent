@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Do not back up encrypted credentials or the local run history. -->
+    <exclude domain="sharedpref" path="." />
+    <exclude domain="database" path="phoneagent.db" />
+    <exclude domain="file" path="datastore" />
+</full-backup-content>

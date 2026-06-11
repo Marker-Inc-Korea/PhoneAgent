@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Phone body -->
+    <path
+        android:fillColor="#B7B9F2"
+        android:pathData="M42,30 h24 a6,6 0 0 1 6,6 v36 a6,6 0 0 1 -6,6 h-24 a6,6 0 0 1 -6,-6 v-36 a6,6 0 0 1 6,-6 z" />
+    <!-- Screen -->
+    <path
+        android:fillColor="#201A3B"
+        android:pathData="M41,38 h26 v30 h-26 z" />
+    <!-- Agent spark / cursor -->
+    <path
+        android:fillColor="#E0A93B"
+        android:pathData="M54,44 l3.5,7 7,3.5 -7,3.5 -3.5,7 -3.5,-7 -7,-3.5 7,-3.5 z" />
+</vector>
