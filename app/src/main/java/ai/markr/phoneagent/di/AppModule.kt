@@ -8,6 +8,10 @@ import ai.markr.phoneagent.data.RunHistoryDao
 import ai.markr.phoneagent.data.SettingsRepository
 import ai.markr.phoneagent.platform.AccessibilityController
 import ai.markr.phoneagent.runtime.AgentRunner
+import ai.markr.phoneagent.voice.AndroidStt
+import ai.markr.phoneagent.voice.AndroidTts
+import ai.markr.phoneagent.voice.SpeechSynthesizer
+import ai.markr.phoneagent.voice.SpeechTranscriber
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,6 +40,16 @@ object AppModule {
 
     @Provides
     fun provideRunHistoryDao(db: AppDatabase): RunHistoryDao = db.runHistoryDao()
+
+    @Provides
+    @Singleton
+    fun provideSpeechSynthesizer(@ApplicationContext context: Context): SpeechSynthesizer =
+        AndroidTts(context)
+
+    @Provides
+    @Singleton
+    fun provideSpeechTranscriber(@ApplicationContext context: Context): SpeechTranscriber =
+        AndroidStt(context)
 
     @Provides
     @Singleton

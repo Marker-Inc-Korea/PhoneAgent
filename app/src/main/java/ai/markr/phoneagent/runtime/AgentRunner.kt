@@ -66,7 +66,10 @@ class AgentRunner(
                 val loop = AgentLoop(
                     controller = controller,
                     llm = llm,
-                    config = AgentConfig(maxSteps = settings.maxSteps),
+                    config = AgentConfig(
+                        maxSteps = settings.maxSteps,
+                        voiceConcise = settings.voiceEnabled,
+                    ),
                 )
                 val result = loop.run(trimmed) { step ->
                     _state.value = _state.value.copy(steps = _state.value.steps + step)

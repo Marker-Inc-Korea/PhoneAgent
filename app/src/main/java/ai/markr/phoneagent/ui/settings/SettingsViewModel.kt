@@ -57,6 +57,8 @@ class SettingsViewModel @Inject constructor(
     fun onTextModelChange(v: String) = update { it.copy(textModel = v) }
     fun onVisionModelChange(v: String) = update { it.copy(visionModel = v) }
     fun onMaxStepsChange(v: Int) = update { it.copy(maxSteps = v) }
+    fun onVoiceEnabledChange(v: Boolean) = update { it.copy(voiceEnabled = v) }
+    fun onSpeechRateChange(v: Float) = update { it.copy(speechRate = v) }
 
     private fun update(transform: (AgentSettings) -> AgentSettings) {
         _ui.value = _ui.value.copy(

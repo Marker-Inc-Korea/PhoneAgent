@@ -17,6 +17,17 @@ class PromptBuilderTest {
         assertFalse(p.contains("\"type\":\"screenshot\""))
     }
 
+    @Test fun voice_mode_adds_conciseness_rule() {
+        val p = PromptBuilder.systemPrompt("작업", visionAvailable = false, voiceConcise = true)
+        assertTrue(p.contains("음성 모드"))
+        assertTrue(p.contains("1~2문장"))
+    }
+
+    @Test fun non_voice_mode_omits_conciseness_rule() {
+        val p = PromptBuilder.systemPrompt("작업", visionAvailable = false, voiceConcise = false)
+        assertFalse(p.contains("음성 모드"))
+    }
+
     @Test fun observation_lists_nodes_with_ids() {
         val snap = snapshot("com.google.android.gm",
             node(1, text = "받은편지함", clickable = true),

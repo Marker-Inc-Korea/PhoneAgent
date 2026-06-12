@@ -28,7 +28,11 @@ class AgentLoop(
         if (!controller.isConnected) {
             return AgentResult(AgentOutcome.ERROR, "접근성 서비스가 연결되지 않았습니다.", emptyList())
         }
-        val system = PromptBuilder.systemPrompt(task, visionAvailable = llm.supportsVision)
+        val system = PromptBuilder.systemPrompt(
+            task,
+            visionAvailable = llm.supportsVision,
+            voiceConcise = config.voiceConcise,
+        )
         val history = ArrayList<LlmMessage>()
         val steps = ArrayList<AgentStep>()
         var pendingImage: ByteArray? = null
@@ -171,4 +175,5 @@ data class AgentConfig(
     val maxSteps: Int = 20,
     val settleMs: Long = 600,
     val maxHistoryMessages: Int = 16,
+    val voiceConcise: Boolean = false,
 )

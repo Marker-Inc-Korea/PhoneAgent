@@ -5,7 +5,7 @@ import ai.markr.phoneagent.agent.model.Snapshot
 /** Builds the system prompt and per-turn observation text for the LLM. */
 object PromptBuilder {
 
-    fun systemPrompt(task: String, visionAvailable: Boolean): String = buildString {
+    fun systemPrompt(task: String, visionAvailable: Boolean, voiceConcise: Boolean = false): String = buildString {
         appendLine("당신은 안드로이드 폰을 직접 조작하는 범용 GUI 에이전트입니다.")
         appendLine("특정 앱에 한정되지 않습니다. 어떤 앱이든 open_app 으로 열어 사람이 화면을 보고 손가락으로")
         appendLine("조작하듯, 주어진 화면(SCREEN)을 읽고 한 번에 하나의 행동으로 목표를 끝까지 수행하세요.")
@@ -19,6 +19,10 @@ object PromptBuilder {
         appendLine("- 화면의 각 요소는 [id]로 표시됩니다. tap/set_text는 그 id를 사용합니다.")
         appendLine("- 목표를 달성했으면 즉시 done 으로 끝내고, 불가능하면 abort 합니다.")
         appendLine("- done.answer 에는 사용자에게 보고할 한국어 요약을 담습니다.")
+        if (voiceConcise) {
+            appendLine("- [음성 모드] 답변은 소리내어 읽힙니다. done.answer 는 1~2문장, 40자 내외로 매우")
+            appendLine("  짧고 자연스러운 구어체로 작성하세요. 목록·머리말·군더더기 금지.")
+        }
         appendLine()
         appendLine("[사용 가능한 action]")
         appendLine("{\"type\":\"open_app\",\"app\":\"Gmail\"}            앱 실행(이름 또는 패키지)")

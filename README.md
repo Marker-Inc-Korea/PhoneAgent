@@ -27,6 +27,18 @@
 `tap·set_text·enter·scroll·swipe·global(back/home/recents)·screenshot` 으로 조작하며,
 목표 달성 시 한국어로 요약 보고한다.
 
+## 음성 대화 (핸즈프리)
+마이크 버튼을 탭해 **말로 지시**하고, 에이전트의 **답변을 음성으로** 듣는다.
+- **STT/TTS는 기기 내장 엔진 사용**(Android `SpeechRecognizer` + `TextToSpeech`) — 온디바이스,
+  무료, 한국어 지원, 모델 번들 불필요. 내장 엔진이 없거나 언어 미지원이면 오픈소스
+  **sherpa-onnx(Kokoro-82M / Piper)** 엔진을 끼울 수 있게 인터페이스(`SpeechSynthesizer`/
+  `SpeechTranscriber`)로 분리되어 있다.
+- **끼어들기(barge-in)**: 답변을 읽는 도중 마이크를 탭하거나 말을 시작하면 **즉시 말이 끊기고**
+  바로 듣기로 전환된다(`VoiceCoordinator` 상태기계, 단위 테스트로 검증).
+- **음성용 짧은 답변**: 음성 모드에서는 시스템 프롬프트가 LLM에게 답변을 1~2문장으로
+  짧게 말하도록 지시한다(장황 금지).
+- 설정에서 음성 on/off와 말하기 속도(0.5~2.0x)를 조절한다.
+
 ## 동작 방식
 ```
 관측(접근성 트리 → 압축 텍스트)  →  LLM(JSON 액션 1개)  →  디스패처(탭/입력/엔터/스크롤/제스처)  →  반복

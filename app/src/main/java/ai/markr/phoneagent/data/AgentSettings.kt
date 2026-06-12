@@ -10,6 +10,8 @@ data class AgentSettings(
     val textModel: String = "",
     val visionModel: String = "",
     val maxSteps: Int = 20,
+    val voiceEnabled: Boolean = true,
+    val speechRate: Float = 1.0f,
 ) {
     val isConfigured: Boolean get() = apiKey.isNotBlank() && textModel.isNotBlank()
     val visionEnabled: Boolean get() = visionModel.isNotBlank()

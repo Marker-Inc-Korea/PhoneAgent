@@ -2,6 +2,7 @@ package ai.markr.phoneagent.ui.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +27,7 @@ import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -33,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -136,6 +139,32 @@ fun SettingsScreen(
                 valueRange = 5f..40f,
                 steps = 34,
             )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(Modifier.weight(1f)) {
+                    Text("음성 대화", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        "마이크로 말하고, 답변을 소리내어 읽어줍니다. 답변은 짧게 보고합니다.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Switch(checked = s.voiceEnabled, onCheckedChange = viewModel::onVoiceEnabledChange)
+            }
+
+            if (s.voiceEnabled) {
+                Text("말하기 속도: ${"%.1f".format(s.speechRate)}x", style = MaterialTheme.typography.titleMedium)
+                Slider(
+                    value = s.speechRate,
+                    onValueChange = viewModel::onSpeechRateChange,
+                    valueRange = 0.5f..2.0f,
+                    steps = 14,
+                )
+            }
 
             OutlinedButton(
                 onClick = viewModel::testConnection,

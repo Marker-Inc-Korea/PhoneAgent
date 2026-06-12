@@ -53,6 +53,22 @@ class LlmClientTest {
         val req = server.takeRequest()
         assertTrue(req.path!!.contains("gemini-x:generateContent"))
         assertTrue(req.path!!.contains("key=mykey"))
+        // Lock the exact Gemini REST request shape (camelCase, system instruction, roles).
+        val body = req.body.readUtf8()
+        assertTrue(body.contains("\"systemInstruction\""))
+        assertTrue(body.contains("\"contents\""))
+        assertTrue(body.contains("\"role\":\"user\""))
+        assertTrue(body.contains("\"parts\""))
+    }
+
+    @Test fun gemini_uses_vision_model_and_inline_image_when_image_present() = runTest {
+        server.enqueue(MockResponse().setBody("""{"candidates":[{"content":{"parts":[{"text":"ok"}]}}]}"""))
+        val client = GeminiClient("k", "gemini-text", base(), visionModel = "gemini-vision")
+        assertTrue(client.supportsVision)
+        withContext(Dispatchers.IO) { client.complete("sys", messages, imageJpeg = byteArrayOf(9, 8, 7)) }
+        val req = server.takeRequest()
+        assertTrue(req.path!!.contains("gemini-vision:generateContent"))
+        assertTrue(req.body.readUtf8().contains("\"inlineData\""))
     }
 
     @Test fun non_2xx_throws_llm_exception() = runTest {

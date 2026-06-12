@@ -10,13 +10,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.MicOff
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,8 +39,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,6 +51,7 @@ import ai.markr.phoneagent.ui.components.AnswerCard
 import ai.markr.phoneagent.ui.components.ReadinessBanner
 import ai.markr.phoneagent.ui.components.StatusChip
 import ai.markr.phoneagent.ui.components.StepRow
+import ai.markr.phoneagent.voice.VoiceState
 
 private val EXAMPLES = listOf(
     "Gmail에서 새 메일 확인하고 요약해줘",
@@ -60,7 +71,19 @@ fun HomeScreen(
 ) {
     val runState by viewModel.runState.collectAsStateWithLifecycle()
     val readiness by viewModel.readiness.collectAsStateWithLifecycle()
+    val voice by viewModel.voice.collectAsStateWithLifecycle()
     var input by remember { mutableStateOf(TextFieldValue("")) }
+    val context = LocalContext.current
+
+    val micPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { granted -> if (granted) viewModel.onMicTap() }
+
+    fun handleMic() {
+        val granted = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) ==
+            PackageManager.PERMISSION_GRANTED
+        if (granted) viewModel.onMicTap() else micPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+    }
 
     LifecycleResumeEffect(Unit) {
         viewModel.refreshPermissions()
@@ -85,6 +108,32 @@ fun HomeScreen(
                     }
                 },
             )
+        },
+        floatingActionButton = {
+            if (voice.enabled && voice.sttAvailable) {
+                val listening = voice.state == VoiceState.LISTENING
+                val speaking = voice.state == VoiceState.SPEAKING
+                FloatingActionButton(
+                    onClick = { handleMic() },
+                    containerColor = when {
+                        listening -> MaterialTheme.colorScheme.error
+                        else -> MaterialTheme.colorScheme.primary
+                    },
+                ) {
+                    Icon(
+                        imageVector = when {
+                            listening -> Icons.Filled.MicOff
+                            speaking -> Icons.Filled.Stop
+                            else -> Icons.Filled.Mic
+                        },
+                        contentDescription = when {
+                            listening -> "듣는 중 — 탭하여 중지"
+                            speaking -> "말하는 중 — 탭하여 끊기"
+                            else -> "음성으로 말하기"
+                        },
+                    )
+                }
+            }
         },
     ) { padding ->
         Column(
@@ -136,6 +185,20 @@ fun HomeScreen(
                     enabled = readiness.ready && input.text.isNotBlank(),
                     modifier = Modifier.fillMaxWidth(),
                 ) { Text("실행") }
+            }
+
+            if (voice.enabled && voice.state == VoiceState.LISTENING) {
+                Text(
+                    text = if (voice.partial.isBlank()) "듣고 있어요…" else "“${voice.partial}”",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            } else if (voice.enabled && voice.state == VoiceState.SPEAKING) {
+                Text(
+                    text = "말하는 중… (마이크를 탭하면 끊을 수 있어요)",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
 
             StatusChip(runState.status, runState.steps.size)

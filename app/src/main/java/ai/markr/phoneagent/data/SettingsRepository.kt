@@ -1,7 +1,9 @@
 package ai.markr.phoneagent.data
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -23,6 +25,8 @@ class SettingsRepository(
         val TEXT_MODEL = stringPreferencesKey("text_model")
         val VISION_MODEL = stringPreferencesKey("vision_model")
         val MAX_STEPS = intPreferencesKey("max_steps")
+        val VOICE_ENABLED = booleanPreferencesKey("voice_enabled")
+        val SPEECH_RATE = floatPreferencesKey("speech_rate")
     }
 
     val settings: Flow<AgentSettings> = context.dataStore.data.map { prefs ->
@@ -36,6 +40,8 @@ class SettingsRepository(
             textModel = prefs[Keys.TEXT_MODEL].orEmpty(),
             visionModel = prefs[Keys.VISION_MODEL].orEmpty(),
             maxSteps = prefs[Keys.MAX_STEPS] ?: 20,
+            voiceEnabled = prefs[Keys.VOICE_ENABLED] ?: true,
+            speechRate = prefs[Keys.SPEECH_RATE] ?: 1.0f,
         )
     }
 
@@ -49,6 +55,8 @@ class SettingsRepository(
             prefs[Keys.TEXT_MODEL] = s.textModel
             prefs[Keys.VISION_MODEL] = s.visionModel
             prefs[Keys.MAX_STEPS] = s.maxSteps
+            prefs[Keys.VOICE_ENABLED] = s.voiceEnabled
+            prefs[Keys.SPEECH_RATE] = s.speechRate
         }
     }
 }
