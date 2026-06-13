@@ -24,7 +24,7 @@ class GeminiLiveTest {
     private val apiKey: String? =
         System.getenv("GEMINI_API_KEY") ?: System.getProperty("gemini.api.key")
     private val model: String =
-        System.getenv("GEMINI_MODEL") ?: System.getProperty("gemini.model") ?: "gemini-2.0-flash"
+        System.getenv("GEMINI_MODEL") ?: System.getProperty("gemini.model") ?: "gemini-2.5-flash"
 
     @Test fun gemini_returns_parseable_agent_action() = runBlocking {
         assumeTrue("GEMINI_API_KEY 미설정 — 라이브 테스트 건너뜀", !apiKey.isNullOrBlank())

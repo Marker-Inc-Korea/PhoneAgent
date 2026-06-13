@@ -20,13 +20,13 @@ data class AgentSettings(
         fun defaultTextModel(p: LlmProvider) = when (p) {
             LlmProvider.ANTHROPIC -> "claude-sonnet-4-6"
             LlmProvider.OPENAI -> "gpt-4o"
-            LlmProvider.GEMINI -> "gemini-2.0-flash"
+            LlmProvider.GEMINI -> "gemini-2.5-flash"
         }
 
         fun defaultVisionModel(p: LlmProvider) = when (p) {
             LlmProvider.ANTHROPIC -> "claude-sonnet-4-6"
             LlmProvider.OPENAI -> "gpt-4o"
-            LlmProvider.GEMINI -> "gemini-2.0-flash"
+            LlmProvider.GEMINI -> "gemini-2.5-flash"
         }
 
         fun defaultBaseUrl(p: LlmProvider) = when (p) {
