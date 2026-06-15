@@ -21,11 +21,27 @@ ADB 설치는 Play Protect의 설치 차단 흐름을 대부분 거치지 않는
 1. **Play 스토어 → 프로필 아이콘 → Play Protect → 설정(톱니)**.
 2. **"Play Protect로 앱 검사"** 끄기 → APK 설치 → 다시 켜기.
 
-## 설치 후 — 접근성이 "제한된 설정"으로 회색일 때 (Android 13+)
-사이드로드 앱은 접근성 토글이 잠겨 있을 수 있다.
-1. **설정 → 앱 → PhoneAgent** 이동.
-2. 우측 상단 **⋮ (점 3개) → "제한된 설정 허용"** / **"Allow restricted settings"** 탭.
-3. 그 후 **설정 → 접근성 → PhoneAgent → 사용** 토글이 활성화된다.
+## 설치 후 — 접근성이 "액세스가 거부됨"/회색일 때 (Android 13+ 제한된 설정)
+사이드로드 앱은 접근성 토글이 잠겨 "액세스가 거부됨"으로 보일 수 있다. OS 강제 보호이며
+앱 코드로는 끌 수 없다. 기기에서 한 번만 풀어준다.
+
+### 폰만으로 (PC 없이)
+"제한된 설정 허용" 메뉴는 **토글을 한 번 시도한 뒤** 나타난다. 순서가 중요하다.
+1. **설정 → 접근성 → PhoneAgent → 토글 ON 시도** → "제한된 설정" 팝업이 뜨면 닫는다.
+2. **설정 → 앱 → PhoneAgent** 이동.
+3. 우측 상단 **⋮ → "제한된 설정 허용"** / **"Allow restricted settings"** 탭. (삼성 One UI 동일)
+4. 다시 **설정 → 접근성 → PhoneAgent → 사용** → 이제 켜진다.
+
+### PC(ADB)로 한 방에 (가장 확실)
+```
+adb shell appops set ai.markr.phoneagent ACCESS_RESTRICTED_SETTINGS allow
+```
+실행 후 설정 → 접근성에서 바로 켜진다. 이 명령이 "제한된 설정" 잠금을 직접 해제한다.
+
+### 처음부터 ADB로 설치하면 제한이 안 걸리는 경우가 많다
+```
+adb install -r PhoneAgent-1.1.2-release.apk
+```
 
 ## 왜 이 빌드가 덜 차단되나 (v1.1.2)
 - 강한 차단 트리거였던 **`QUERY_ALL_PACKAGES` 권한을 제거**하고, 정책 친화적인
