@@ -20,3 +20,7 @@ keystore.properties
 
 # OMC / agent state
 .omc/state/
+
+# Stray nested projects / conversation logs (never publish)
+gjc-android-agent/
+gjc-conversation/
